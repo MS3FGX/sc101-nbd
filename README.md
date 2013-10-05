@@ -1,4 +1,6 @@
-<img style="float:right" src="http://www.digifail.com/images/misc/github/netgear_sc101.jpg" />
+<p align="center">
+<img src="http://www.digifail.com/images/misc/github/netgear_sc101.jpg" />
+</p>
 sc101-nbd
 ==============
 
