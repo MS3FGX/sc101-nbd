@@ -34,6 +34,10 @@
 #include "psan_wireformat.h"
 #include "util.h"
 
+// App info
+#define VERSION	"0.6"
+#define APPNAME "ut"
+
 #define DIE(...) do {               \
     syslog(LOG_ERR, __VA_ARGS__);   \
     err(EXIT_FAILURE, __VA_ARGS__); \
@@ -120,13 +124,6 @@ void resubmit_outstanding(int sock, struct sockaddr_in *dest)
 
 	out = next;
     }
-}
-
-void usage(void)
-{
-    fprintf(stderr, "usage: ut OPTIONS\n");
-
-    exit(1);
 }
 
 void psan_listall(void)
@@ -572,32 +569,61 @@ void psan_attach_nbd(char *id, char *path)
 }
 #endif
 
+void help(void)
+{
+	
+	printf("%s (v%s) by Iain Wade, Claudio Jolowicz, and Tom Nardi\n", APPNAME, VERSION);
+	printf("----------------------------------------------------------------\n");
+    printf("This tool can attach a Netgear Storage Central 101 (SC101) to a Linux\n"
+		"system as a network block device (NBD). Partitions must be managed with\n"
+		"the Windows-only configuration program, this tool can only mount existing\n"
+		"partitions.\n");
+	printf("\n");		
+	printf("WARNING: There is no compatibility with Windows clients, partitions must\n"
+		"be formated before use, deleting all existing data.\n");
+		
+	printf("\n");
+	printf("Commands:\n"
+		"\tlistall       List Netgear NBD devices discovered on network\n"
+		"\tattach        Link NBD device to device node (i.e. /dev/nbd0)\n"
+		"\tresolve       Return IP address for given partition ID\n");
+	printf("\n");
+
+
+    exit(1);
+}
+
 int main(int argc, char *argv[])
 {
     char *dev = NULL;
     char *cmd = NULL;
     int ch;
 
-    while ((ch = getopt(argc, argv, "d:D")) != -1)
+    while ((ch = getopt(argc, argv, "d:Dh")) != -1)
     {
-	switch (ch) {
+	switch (ch)
+	{
 	    case 'd':
-		dev = optarg;
-		break;
+			dev = optarg;
+			break;
 	    case 'D':
-		debug = 1;
-		break;
-	    case '?':
+			debug = 1;
+			break;
+	    case 'h':
+			printf("Help\n");
+			help();
+			break;
 	    default:
-		usage();
+			printf("Unknown option. Use -h for help, or see README.\n");
+			exit(1);
 	}
     }
-
+    
     psan_init(dev);
 
 #define args (argc - optind)
     if (args < 1)
-	usage();
+	help();
 
     cmd = argv[optind++];
 
@@ -614,7 +640,7 @@ int main(int argc, char *argv[])
 	psan_attach_nbd(argv[optind], argv[optind+1]);
 #endif
     else
-	usage();
+	printf("Command not recognized, check README file and output of 'help' command.\n");
 
     return 0;
 }
