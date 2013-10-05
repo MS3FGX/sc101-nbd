@@ -12,6 +12,25 @@ mount existing partitions.
 **WARNING:** There is no compatibility with Windows clients, partitions must
 be formated before use, deleting all existing data.
 
+Usage
+==============
+
+The SC101 is a storage area network (SAN) device, which differs from the more
+common network attached storage (NAS) devices in that, rather than providing
+file-level access to the drives over the network (via SMB, NAS, FTP, etc),
+the device attaches to the kernel as if it was a local block device.
+
+Communicating with the SC101 therefore requires specialized software, which
+Netgear only provides for Windows.
+
+sc101-nbd provides the software needed to connect an SC101 to the Linux
+kernel, but the actual partitions on the SC101 will still need to be created
+and managed with the official Windows configuration software.
+
+In addition, once the partitions have been attached to the kernel, they still
+need to be formatted and mounted as with any local storage device using the
+standard Linux tools.
+
 Commands
 ==============
 

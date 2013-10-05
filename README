@@ -1,15 +1,76 @@
-The Netgear Storage Central 101 (sc101) is an IP based block storage device.
+================================================================================
+=                  sc101-nbd - Netgear SC101 SAN Tools                         =
+=                       Tom Nardi (MS3FGX@gmail.com)                           =
+================================================================================
 
-Netgear ships a clustered filesystem with the product (perhaps based on DataPlow SFS) which allows multiple Windows client machines to concurrently mount and read/write directly to the device; it is a SAN rather than a NAS device.
+sc101-nbd supplies the userland utility and daemon script to mount partitions
+on the Netgear Storage Central (SC101) SAN under Linux as a standard network
+block device (NBD). Partitions must be managed with the Windows-only
+configuration program, this tool can only mount existing partitions.
 
-There is no protocol documentation provided, nor any driver support for operating systems other than Windows.
+**WARNING:** There is no compatibility with Windows clients, partitions must
+be formated before use, deleting all existing data.
 
-This software allows Linux to access the the sc101 as a block device, without requiring a new kernel module.
+--------------------------------------------------------------------------------
+- Usage                                                                        -
+--------------------------------------------------------------------------------
 
-It achieves this by translating between the kernel's existing NBD protocol and the reverse engineered protocol used by the sc101 (I call it PSAN, perhaps incorrectly).
+The SC101 is a storage area network (SAN) device, which differs from the more
+common network attached storage (NAS) devices in that, rather than providing
+file-level access to the drives over the network (via SMB, NAS, FTP, etc),
+the device attaches to the kernel as if it was a local block device.
 
-On top of the NBD devices you can run RAID, LVM, and any existing filesystems (ext2/3, ocfs2, etc).
+Communicating with the SC101 therefore requires specialized software, which
+Netgear only provides for Windows.
 
-The resulting storage area is not interoperable with existing Windows clients.
+sc101-nbd provides the software needed to connect an SC101 to the Linux
+kernel, but the actual partitions on the SC101 will still need to be created
+and managed with the official Windows configuration software.
 
-This driver also works with the sc101T.
+In addition, once the partitions have been attached to the kernel, they still
+need to be formatted and mounted as with any local storage device using the
+standard Linux tools.
+
+--------------------------------------------------------------------------------
+- Commands                                                                     -
+--------------------------------------------------------------------------------
+
+The included utility "ut" supports the following commands:
+
+listall
+    Display a listing of all discovered Netgear SC101's, along with their
+IP address, firmware version, and created partitions.
+
+attach
+    Attach a partition to a NBD device node on the local machine
+(i.e. /dev/nbd0). After attaching the partition, it still needs to be mounted
+with the standard "mount" command.
+
+resolve
+    Display the IP address associated with a given partition ID.
+
+--------------------------------------------------------------------------------
+- Acknowledgements                                                             -
+--------------------------------------------------------------------------------
+
+sc101-nbd was created by Iain Wade in 2007, his original code is available on
+Google Code:
+
+http://code.google.com/p/sc101-nbd/
+
+Claudio Jolowicz made some fixes and modernizations and uploaded his fork to
+GitHub in 2011.
+
+--------------------------------------------------------------------------------
+- License                                                                      -
+--------------------------------------------------------------------------------
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License version 2 as published by the Free
+Software Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
+
+For details, see the file "COPYING" in the source directory.
