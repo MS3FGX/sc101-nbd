@@ -255,7 +255,7 @@ void psan_write(char *id, long long offset, char *file)
 	    break;
 
     if (power == 16)
-	errx(EXIT_FAILURE, "bad power: %d(length=%u)", power, sizeof(buf));
+	errx(EXIT_FAILURE, "bad power: %d(length=%lu)", power, sizeof(buf));
 
     /* build packet */
     uint16_t expected_seq = psan_next_seq();
@@ -305,7 +305,7 @@ void psan_attach_nbd(char *id, char *path)
 	if ((sysfs = open(filename, O_RDWR)) >= 0)
 	{
 	    if (write(sysfs, "8", sizeof("8")-1) < 0)
-	      warn("write(sysfs, \"8\", %u)", sizeof("8")-1);
+	      warn("write(sysfs, \"8\", %lu)", sizeof("8")-1);
 
 	    close(sysfs);
 	}
