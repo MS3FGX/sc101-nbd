@@ -41,6 +41,12 @@ install: ut
 	$(INSTALL) -m 0644 ut.8 $(DESTDIR)$(man8dir)/ut.8
 	gzip --best --force $(DESTDIR)$(man8dir)/*.8
 
+uninstall:
+	rm -f $(DESTDIR)$(sysconfdir)/init.d/ut
+	rm -f $(DESTDIR)$(sysconfdir)/uttab
+	rm -f $(DESTDIR)$(sbindir)/ut
+	rm -f $(DESTDIR)$(man8dir)/ut.8.gz
+
 clean:
 	rm -f $(OBJS) ut
 
